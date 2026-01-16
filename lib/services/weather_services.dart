@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class WeatherServices{
-  final String apiKey = "3b719c8b28884fff91e233145260801";
+  final String apiKey = "d6825e9e3c2b42f691f212512261201";
   final String forecastBaseUrl = "http://api.weatherapi.com/v1/forecast.json";
   final String searchBaseUrl = "http://api.weatherapi.com/v1/search.json";
 
@@ -33,7 +33,7 @@ Future<Map<String, dynamic>> fetch7DaysWeather(String city) async{
 
   //metodo para traer el clima sugerido para una entrada
   Future<List<dynamic>> fetchCitySuggestionWeather(String query) async{
-    final url = '$forecastBaseUrl?key=$apiKey&q=$query';
+    final url = '$searchBaseUrl?key=$apiKey&q=$query';
     final response = await http.get(Uri.parse(url));
 
     if(response.statusCode == 200){

@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/screen/forecast_screen.dart';
 
@@ -33,83 +32,38 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // //metodo para mostrar el dialogo de busqueda
-  // void _showCitySearchDialog() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('Search City'),
-  //         content: TextField(
-  //           controller: _cityController,
-  //           decoration: const InputDecoration(hintText: "Enter city name"),
-  //         ),
-  //         actions: [
-  //           TextButton(
-  //             child: const Text('Cancel'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //           TextButton(
-  //             child: const Text('Search'),
-  //             onPressed: () {
-  //               setState(() {
-  //                 city = _cityController.text;
-  //               });
-  //               _fetchForecastData();
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   void _showCitySelectionDialog() {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Enter city name'),
-          content: TypeAheadField(
-            builder: (context, controller, focusNode) {
-              return TextField(
-                controller: controller,
-                focusNode: focusNode,
-                autofocus: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  labelText: 'City',
-                ),
-              );
-            },
-            itemBuilder: (context, suggestion) {
-              return ListTile(title: Text(suggestion['name']));
-            },
-            onSelected: (city) {
-              setState(() {
-                city = city['name'];
-              });
-            },
-            suggestionsCallback: (search) async {
-              return await _weatherServices.fetchCitySuggestionWeather(search);
-            },
+          title: const Text('Enter city name'),
+          content: TextField(
+            controller: _cityController,
+            autofocus: true,
+            decoration: const InputDecoration(hintText: "Enter city name"),
           ),
           actions: [
             TextButton(
-                onPressed: (){
-                  Navigator.pop(context);
-                  },
-                child: Text('Cancel')),
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
             TextButton(
-                onPressed: (){
-                  Navigator.pop(context); _fetchForecastData();
-                  },
-                child: Text('Submit')),
+              child: const Text('Search'),
+              onPressed: () {
+                if (_cityController.text.isNotEmpty) {
+                  setState(() {
+                    city = _cityController.text;
+                  });
+                  _fetchForecastData();
+                }
+                _cityController.clear();
+                Navigator.of(context).pop();
+              },
+            ),
           ],
         );
       },
@@ -157,6 +111,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 20),
                   InkWell(
                     onTap: _showCitySelectionDialog,
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: Text(
+                        city,
+                        style: GoogleFonts.lato(
+                          fontSize: 36,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 20),
                   Center(
